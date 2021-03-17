@@ -29,12 +29,16 @@ let computerPaddleYVelocity = 1;
 //     computerPaddle.style.top = `${computerPaddleYPosition}px`;
 // }
 
-let positionX = 0;
+let positionX = 100;
+let velocityY = 100;
+
 let velocityX = 1;
+let velocityY = 1;
 
 const ball = document.querySelector('.ball');
 
 function update() {
+    
     positionX += velocityX;
     ball.style.left = `${positionX}px`;
     
