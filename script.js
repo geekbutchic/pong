@@ -17,16 +17,27 @@ let computerPaddleYPosition = 0;
 let computerPaddleYVelocity = 1;
 
 // Update the pong world
+// function update() {
+
+//     // Update the computer paddle's position
+//     computerPaddleYPosition = computerPaddleYPosition + computerPaddleYVelocity;
+
+//     // If the computer paddle goes off the edge of the screen, bring it back
+//     computerPaddleYPosition = computerPaddleYPosition % (GAME_AREA_HEIGHT - PADDLE_HEIGHT);
+
+//     // Apply the y-position 
+//     computerPaddle.style.top = `${computerPaddleYPosition}px`;
+// }
+
+let positionX = 0;
+let velocityX = 1;
+
+const ball = document.querySelector('.ball');
+
 function update() {
-
-    // Update the computer paddle's position
-    computerPaddleYPosition = computerPaddleYPosition + computerPaddleYVelocity;
-
-    // If the computer paddle goes off the edge of the screen, bring it back
-    computerPaddleYPosition = computerPaddleYPosition % (GAME_AREA_HEIGHT - PADDLE_HEIGHT);
-
-    // Apply the y-position 
-    computerPaddle.style.top = `${computerPaddleYPosition}px`;
+    positionX += velocityX;
+    ball.style.left = `${positionX}px`;
+    
 }
 
 // Call the update() function everytime the browser is ready to re-render
@@ -35,3 +46,4 @@ function loop() {
     window.requestAnimationFrame(loop);
 }
 window.requestAnimationFrame(loop);
+
