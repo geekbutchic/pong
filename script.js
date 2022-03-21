@@ -1,63 +1,89 @@
-// Size of the game area (in px)
-const GAME_AREA_WIDTH = 700;
-const GAME_AREA_HEIGHT = 500;
+// CONSTANTS
+const game_area_width = 700;
+const game_area_height = 500;
+const ball_size = 20;
+const paddle_width = 20;
+const paddle_height = 100;
 
-// Size of the paddles (in px)
-const PADDLE_HEIGHT = 100;
-const PADDLE_WIDTH = 20;
-
-// Size of the ball (in px)
-const BALL_SIZE = 20;
-
-// Get the computer paddle element
-const computerPaddle = document.querySelector('.computer-paddle');
-
-// Initial computer paddle y-position and y-velocity
-// let computerPaddleYPosition = 0;
-// let computerPaddleYVelocity = 1;
-
-// Update the pong world
-// function update() {
-
-//     // Update the computer paddle's position
-//     computerPaddleYPosition = computerPaddleYPosition + computerPaddleYVelocity;
-
-//     // If the computer paddle goes off the edge of the screen, bring it back
-//     computerPaddleYPosition = computerPaddleYPosition % (GAME_AREA_HEIGHT - PADDLE_HEIGHT);
-
-//     // Apply the y-position 
-//     computerPaddle.style.top = `${computerPaddleYPosition}px`;
-// }
-
+//BALL POSITION AND VELOCITY
 let positionX = 100;
-let velocityY = 100;
-let velocityX = 1;
-let velocityY = 1;
+let positionY = 100;
+let velocityX = 4;
+let velocityY = 4;
 
-const ball = document.querySelector('.ball');
+//GET THE BALL DOM ELEMENT
+const ball = document.querySelector(".ball");
 
-function update() {
-    
-    positionX += velocityX;
-    positionY += velocityY;
+//COMPUTER PADDLE VARIABLES
+const computer = document.querySelector(".computer-paddle");
+let computerPositionY = 100;
 
-    if (positionY >= GAME_AREA_HEIGHT - BALL_SIZE) {
-        velocityY = -velocityY;
-    }
+//PLAYER PADDLE VARIABLES
+const player = document.querySelector(".player-paddle");
+let playerPositionY = 100;
 
-    if (positionY <= 0) {
-        velocityY = -velocityY;
-    }
+//HANDLE KEYBOARD INPUT
+const handleKeyboardInput = (event) => {
+  if (event.key === "ArrowDown") {
+    playerPositionY += 100;
+  } else if (event.key === "ArrowUp") {
+    playerPositionY -= 100;
+  }
+}
+//PLAYER PADDLE CONTROLLER
+document.addEventListener("keydown", handleKeyboardInput);
 
-    
-    ball.style.top = `${positionX}px`;
-    ball.style.left = `${positionX}px`;
+//UPDATE PONG 
+const update = () => {
+  positionX += velocityX;
+  positionY += velocityY;
+
+  computerPositionY = positionY;
+
+  //IF WE HIT THE BOTTOM - BALL WILL GO UP IN DIRECTION
+  if (positionY >= game_area_height - ball_size) {
+    velocityY = -velocityY;
+  }
+
+  //IF WE HIT THE TOP, MAKE THE BALL GO IN THE DOWN DIRECTION
+  if (positionY <= 0) {
+    velocityY = -velocityY;
+  }
+
+  //IF THE BALL HITS THE LEFT OR THE RIGHT, RESET IT
+  if (positionX <= 0 || positionX >= game_area_width - ball_size) {
+    positionX = 100;
+    positionY = 100;
+  }
+
+  //IF THE BALL HITS THE COMPUTER PADDLE, BOUNCE IT
+  if (
+    positionX >= game_area_width - ball_size - paddle_width &&
+    positionY >= computerPositionY - ball_size &&
+    positionY <= computerPositionY + paddle_height
+  ) {
+    velocityX = - velocityX;
+  }
+
+  //IF THE BALL HITS THE PLAYER PADDLE, BOUNCE IT
+  if (
+    positionX <= paddle_width &&
+    positionY >= playerPositionY - ball_size &&
+    positionY <= playerPositionY + game_area_height
+  ) {
+    velocityX = -velocityX;
+  }
+
+  ball.style.top = `${positionY}px`;
+  ball.style.left = `${positionX}px`;
+
+  computer.style.top = `${computerPositionY}px`;
+  player.style.top = `${playerPositionY}px`;
 }
 
-// Call the update() function everytime the browser is ready to re-render
+//CALL THE UPDATE() FUNCTION EVERY TIME THE BROWSER IS READY TO RE-RENDER
 function loop() {
-    update();
-    window.requestAnimationFrame(loop);
+  update();
+  window.requestAnimationFrame(loop);
 }
 window.requestAnimationFrame(loop);
-
